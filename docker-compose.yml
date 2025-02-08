@@ -1,0 +1,14 @@
+services:
+  app:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: ./docker/al2023/Dockerfile
+      args:
+        - USERNAME=${USERNAME:-appuser}
+        - GROUPNAME=${GROUPNAME:-appuser}
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+        - PYTHON_VERSION=${PYTHON_VERSION:-3.12.0}
+      
