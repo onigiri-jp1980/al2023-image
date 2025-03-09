@@ -16,7 +16,8 @@ COPY ./docker/al2023/gcloud.repo /etc/yum.repos.d
 RUN dnf -y upgrade --releasever=latest && \
   dnf install -y --enablerepo=google-cloud-cli unzip tar gcc zlib-devel \
     bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel \
-    libffi-devel xz-devel sudo shadow nano git google-cloud-cli docker && \
+    libffi-devel xz-devel sudo shadow nano file procps-ng git google-cloud-cli && \
+  dnf groupinstall -y --disablerepo=google-cloud-cli 'Development Tools' && \
   dnf clean all && \
   groupadd -g ${GID} ${GROUPNAME} -f && \
   useradd --uid ${UID} --gid ${GID} -G root -m -s /bin/bash ${USERNAME} && \
@@ -33,5 +34,10 @@ USER ${USERNAME}
 WORKDIR /home/${USERNAME}
 ARG PYENV_ROOT=/home/${USERNAME}/.pyenv
 COPY ./docker/al2023/bashrc .bashrc
+
 RUN curl https://pyenv.run | bash
 RUN ${PYENV_ROOT}/bin/pyenv install ${PYTHON_VERSION} && ${PYENV_ROOT}/bin/pyenv local ${PYTHON_VERSION}
+
+# homebrew
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)" && \
+  echo 'export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH' >> .bash_profile
