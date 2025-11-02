@@ -2,10 +2,16 @@
 AmazonLinux2023を以下の構成で構築してWSLにインポートする際のものです。
 - pyenv越しにPython3.12を利用できる
   - AL2023にはPython3.9が同梱されていますが、これをPython3.10以降にアップグレードする公式な方法がないため
-  - AL2023公式でPython3.10以降のRPMが配布されてはいますけど、alternativeとかでサクっと切り替えられずダルいのです。
+  - AL2023公式でPython3.10以降のRPMが配布されてはいますけど、alternative等でサクっと切り替えられずダルいのです。
 - docker-compose を利用できる
   - Podmanベースにしてもいいんですけど
 ## 使用方法
+### 環境設定ファイルの準備
+```bash
+$ cp .env.example .env
+```
+ログインユーザー名、グループ名とかをお好みのものに変更してください
+
 ### イメージのビルド
 ```bash
 $ docker compose build
@@ -22,6 +28,7 @@ $ docker compose exec app bash
 本稿ではWSLへのインポートを前提にしているので、Windows側の`C:\wsl`に保存される
 手順で記述します。
 ```bash
+## ビルドしたイメージでコンテナを起動
 $ docker compose up -d
 ## 無圧縮tarで出力
 $ docker export $(docker compose ps -q) > /mnt/c/wsl/export.tar

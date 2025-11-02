@@ -2,7 +2,11 @@ FROM amazonlinux:2023 AS collector
 ARG DOCKER_COMPOSE_VERSION
 ARG ARCH
 ARG DOCKER_COMPOSE_URL=https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-linux-${ARCH}
-RUN curl -sSL -J ${DOCKER_COMPOSE_URL} -o docker-compose && chmod +x ./docker-compose
+RUN dnf update && dnf clean all && dnf install -y util-linux && set -eux; \
+  LATEST=$(curl -Ls -o /dev/null -w %{url_effective} https://github.com/docker/compose/releases/latest | rev | cut -d/ -f1 | rev); \
+  curl -L "https://github.com/docker/compose/releases/download/${LATEST}/${ARCH}" -o docker-compose; \
+  chmod +x ./docker-compose
+
 FROM amazonlinux:2023
 ARG USERNAME
 ARG GROUPNAME
@@ -33,11 +37,10 @@ COPY --from=collector /docker-compose /usr/local/libexec/docker/cli-plugins/
 USER ${USERNAME}
 WORKDIR /home/${USERNAME}
 ARG PYENV_ROOT=/home/${USERNAME}/.pyenv
-COPY ./docker/al2023/bashrc .bashrc
+COPY --chown=${USERNAME}:${GROUPNAME} ./docker/al2023/bashrc .bashrc
 
-RUN curl https://pyenv.run | bash
-RUN ${PYENV_ROOT}/bin/pyenv install ${PYTHON_VERSION} && ${PYENV_ROOT}/bin/pyenv local ${PYTHON_VERSION}
+RUN curl https://pyenv.run | bash && \
+  ${PYENV_ROOT}/bin/pyenv install ${PYTHON_VERSION} && ${PYENV_ROOT}/bin/pyenv local ${PYTHON_VERSION}
 
 # homebrew
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)" && \
-  echo 'export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH' >> .bash_profile
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
