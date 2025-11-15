@@ -20,7 +20,8 @@ COPY ./docker/al2023/gcloud.repo /etc/yum.repos.d
 RUN dnf -y upgrade --releasever=latest && \
   dnf install -y --enablerepo=google-cloud-cli unzip tar gcc zlib-devel \
     bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel \
-    libffi-devel xz-devel sudo shadow nano file procps-ng git google-cloud-cli && \
+    libffi-devel xz-devel sudo shadow nano file procps-ng git google-cloud-cli \
+    passwd iproute findutils diffutils util-linux && \
   dnf groupinstall -y --disablerepo=google-cloud-cli 'Development Tools' && \
   dnf clean all && \
   groupadd -g ${GID} ${GROUPNAME} -f && \
