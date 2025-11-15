@@ -1,9 +1,9 @@
 #最新のdocker-composeを取得
 FROM amazonlinux:2023 AS collector
-ARG DOCKER_COMPOSE_URL=https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-linux-${ARCH}
+ARG DOCKER_COMPOSE_BASEURL=https://github.com/docker/compose/releases
 RUN dnf install -y util-linux && \
-    LATEST=$(curl -Ls -o /dev/null -w %{url_effective} https://github.com/docker/compose/releases/latest | rev | cut -d/ -f1 | rev) && \
-    curl -L "https://github.com/docker/compose/releases/download/${LATEST}/docker-compose-$(uname -s)-$(uname -m)" -o ./docker-compose && \
+    LATEST=$(curl -Ls -o /dev/null -w %{url_effective} ${DOCKER_COMPOSE_BASEURL}/latest | rev | cut -d/ -f1 | rev) && \
+    curl -L "${DOCKER_COMPOSE_BASEURL}/download/${LATEST}/docker-compose-$(uname -s)-$(uname -m)" -o ./docker-compose && \
     chmod +x ./docker-compose && dnf clean all
 
 #本編
