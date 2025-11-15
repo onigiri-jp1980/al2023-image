@@ -37,10 +37,11 @@ COPY --from=collector /docker-compose /usr/local/libexec/docker/cli-plugins/
 # pyenv & homebrew
 USER ${USERNAME}
 WORKDIR /home/${USERNAME}
+ARG PYENV_ROOT=/home/${USERNAME}/.pyenv
 ARG BREW_INSTALL_URL=https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh
 COPY --chown=${USERNAME}:${GROUPNAME} ./docker/al2023/bashrc .bashrc
 RUN curl https://pyenv.run | bash && \
   ${PYENV_ROOT}/bin/pyenv install ${PYTHON_VERSION} && \
   ${PYENV_ROOT}/bin/pyenv local ${PYTHON_VERSION} && \
-  sudo sh -c "$(curl -fsSL ${BREW_INSTALL_URL})"
+  sh -c "$(curl -fsSL ${BREW_INSTALL_URL})"
 
