@@ -17,6 +17,6 @@ alias which='command -v'
 
 eval "$(direnv hook bash)"
 PYENV_ROOT="$HOME/.pyenv"
-LINUXBREW_HOME="/home/linuxbrew/.linuxbrew"
-command -v pyenv >/dev/null || export PATH="${LINUXBREW_HOME}/bin:${PYENV_ROOT}/bin:$PATH"
+command -v pyenv >/dev/null || export PATH="${PYENV_ROOT}/bin:$PATH"
 eval "$(pyenv init -)"
+'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
