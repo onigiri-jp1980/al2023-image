@@ -1,10 +1,12 @@
 # WSL用イメージ構築(AmazonLinux2023)
-AmazonLinux2023を以下の構成で構築してWSLにインポートする際のものです。
+AmazonLinux2023を以下の構成でセットアップしてWSLにインポートするためのイメージを際のものです。
+
 - pyenv越しにPython3.12を利用できる
   - AL2023にはPython3.9が同梱されていますが、これをPython3.10以降にアップグレードする公式な方法がないため
   - AL2023公式でPython3.10以降のRPMが配布されてはいますけど、alternative等でサクっと切り替えられずダルいのです。
+- HomeBrew(LinuxBrew)を利用できる
 - docker-compose を利用できる
-  - Podmanベースにしてもいいんですけど
+  - Podmanベースにしてもいいんですけど、仕事ではまだDocker compose一択なので。
 ## 使用方法
 ### 環境設定ファイルの準備
 ```bash
