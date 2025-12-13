@@ -19,7 +19,7 @@ ENV SHELL=/bin/bash
 COPY ./docker/al2023/wsl.conf /etc
 COPY ./docker/al2023/gcloud.repo /etc/yum.repos.d
 RUN dnf -y upgrade --releasever=latest && \
-  dnf install -y --enablerepo=google-cloud-cli unzip tar gcc zlib-devel \
+  dnf install -y --enablerepo=google-cloud-cli unzip tar gcc zlib-devel jq curl\
     bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel \
     libffi-devel xz-devel sudo shadow nano file procps-ng git google-cloud-cli \
     passwd iproute findutils diffutils util-linux docker awscli-2 && \
