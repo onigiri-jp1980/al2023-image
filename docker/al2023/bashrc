@@ -1,6 +1,8 @@
 umask 022
-PS1='\[\e[0m\][\[\e[0;32m\]\u\[\e[0m\]@\[\e[0m\]\H \[\e[0;38;5;33m\]\W\[\e[0m\]]$ '
-
+# gitブランチ表示なしのプロンプト
+#PS1='\[\e[0m\][\[\e[0;32m\]\u\[\e[0m\]@\[\e[0m\]\H \[\e[0;38;5;33m\]\W\[\e[0m\]]$ '
+# gitブランチ表示ありのプロンプト
+PS1='\[\e[0m\][\[\e[93m\]\u\[\e[0m\]@\[\e[92m\]\h\[\e[0m\] \[\e[38;5;111m\]\W\[\e[0m\]]\[\e[96m\]$(parse_git_branch)\[\e[00m\]$ \[\e[0m\]'
 # You may uncomment the following lines if you want `ls' to be colorized:
 LS_OPTIONS='--color=auto'
 eval "$(dircolors)"
@@ -20,3 +22,14 @@ PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="${PYENV_ROOT}/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+        for rc in ~/.bashrc.d/*; do
+                if [ -f "$rc" ]; then
+                        . "$rc"
+                fi
+        done
+fi
+
+unset rc
