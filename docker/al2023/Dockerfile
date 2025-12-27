@@ -1,11 +1,5 @@
 #最新のdocker-composeを取得
-FROM amazonlinux:2023 AS collector
-ARG DOCKER_COMPOSE_BASEURL=https://github.com/docker/compose/releases
-RUN set -ex && dnf install -y util-linux && \
-    LATEST=$(curl -Ls -o /dev/null -w %{url_effective} ${DOCKER_COMPOSE_BASEURL}/latest | rev | cut -d/ -f1 | rev) && \
-    curl -L "${DOCKER_COMPOSE_BASEURL}/download/${LATEST}/docker-compose-$(uname -s)-$(uname -m)" -o ./docker-compose && \
-    chmod +x ./docker-compose && dnf clean all
-
+#docker Desktop併用前提で一旦削除  
 #本編
 FROM amazonlinux:2023
 ARG USERNAME
@@ -35,7 +29,6 @@ RUN set -ex && dnf -y upgrade --releasever=latest && \
   echo "${USERNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USERNAME} && \
   curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION}.x | sudo bash - && \
   dnf install -y nodejs && dnf clean all
-COPY --from=collector /docker-compose /usr/local/libexec/docker/cli-plugins/
 
 # pyenv & homebrew
 USER ${USERNAME}
@@ -52,4 +45,3 @@ RUN set -ex && pwd &&ls -la && curl https://pyenv.run | bash && \
   sh -c "$(curl -fsSL ${BREW_INSTALL_URL})" && \
   find .ssh -type f ! -name '*.pub' -exec chmod 600 {} \; && \
   rm .ssh/.gitignore
-
