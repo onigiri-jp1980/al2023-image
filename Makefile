@@ -1,20 +1,26 @@
 COMPRESS ?= none
 IMAGE_NAME := $(shell basename $(CURDIR))-app
 CONTAINER_NAME := app
+# Docker Composeのコマンドを定義
 DOCKER_COMPOSE := docker compose
+DOCKER_COMPOSE_UP := $(DOCKER_COMPOSE) up -d
+DOCKER_COMPOSE_RUN := $(DOCKER_COMPOSE) run --rm $(CONTAINER_NAME)
+
+# リリース日を取得するコマンドを定義
 RELEASE_DATE := sed -n 's/^PRETTY_NAME=".*\.\([0-9]\{8\}\)"$$/\1/p' /etc/os-release
+EXPORT_DATE := $(shell date +%Y%m%d)
 EXPORT_PREFIX := export-al2023_
-ifeq ($(COMPRESS), xz)
+ifeq ($(COMPRESS), xz) # xz圧縮
 COMPRESS_CMD := xz -c -
 ARCHIVE_EXT := .tar.xz
-else ifeq ($(COMPRESS), gzip)
+else ifeq ($(COMPRESS), gzip) # gzip圧縮
 COMPRESS_CMD := gzip -c -
 ARCHIVE_EXT := .tar.gz
-else ifeq ($(COMPRESS), none)
+else ifeq ($(COMPRESS), none) # 圧縮なし
 COMPRESS_CMD := cat
 ARCHIVE_EXT := .tar
 else
-$(error Invalid compression method: $(COMPRESS))
+$(error Invalid compression method: $(COMPRESS)) # 圧縮方法が無効な場合
 endif
 
 default: help
@@ -31,8 +37,6 @@ help:
 	@echo "  指定なし（デフォルト） - 圧縮なし"
 .PHONY: help
 
-DOCKER_COMPOSE_UP := $(DOCKER_COMPOSE) up -d
-DOCKER_COMPOSE_RUN := $(DOCKER_COMPOSE) run --rm $(CONTAINER_NAME)
 up:
 	$(DOCKER_COMPOSE_UP)
 .PHONY: up
@@ -54,7 +58,7 @@ image:
 	$(DOCKER_COMPOSE) up -d && \
 	CONTAINER_ID=$$($(DOCKER_COMPOSE) ps -q) && \
 	RELEASE_DATE=$$($(DOCKER_COMPOSE) run --rm app $(RELEASE_DATE)) && \
-	docker export $$CONTAINER_ID | $(COMPRESS_CMD) > ./$(EXPORT_PREFIX)$${RELEASE_DATE}$(ARCHIVE_EXT) && \
+	docker export $$CONTAINER_ID | $(COMPRESS_CMD) > ./$(EXPORT_PREFIX)$${RELEASE_DATE}_$(EXPORT_DATE)$(ARCHIVE_EXT) && \
 	$(DOCKER_COMPOSE) down
 .PHONY: image
 
