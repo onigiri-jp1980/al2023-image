@@ -12,13 +12,11 @@ ARG NODE_VERSION
 ENV SHELL=/bin/bash
 COPY ./docker/al2023/wsl.conf /etc
 COPY ./docker/al2023/gcloud.repo /etc/yum.repos.d
+COPY ./docker/al2023/dnf.txt /tmp
 RUN set -ex && dnf -y upgrade --releasever=latest && \
-  dnf install -y --enablerepo=google-cloud-cli unzip tar gcc zlib-devel jq \
-    bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel \
-    libffi-devel xz-devel sudo shadow nano file procps-ng git google-cloud-cli e2fsprogs parted\
-    passwd iproute findutils diffutils util-linux docker awscli-2 bash-completion make && \
+  dnf install -y --enablerepo=google-cloud-cli $(cat /tmp/dnf.txt) && \
   dnf groupinstall -y --disablerepo=google-cloud-cli 'Development Tools' && \
-  dnf clean all && \
+  dnf clean all  && rm /tmp/dnf.txt && \
   mkdir /etc/skel/.ssh && chmod 700 /etc/skel/.ssh && \
   touch /etc/skel/.ssh/authorized_keys && \
   chmod 600 /etc/skel/.ssh/authorized_keys && \

@@ -1,4 +1,6 @@
 COMPRESS ?= none
+IMAGE_NAME := $(shell basename $(CURDIR))-app
+CONTAINER_NAME := app
 DOCKER_COMPOSE := docker compose
 RELEASE_DATE := sed -n 's/^PRETTY_NAME=".*\.\([0-9]\{8\}\)"$$/\1/p' /etc/os-release
 EXPORT_PREFIX := export-al2023_
@@ -28,6 +30,21 @@ help:
 	@echo "  gzip - gzip圧縮"
 	@echo "  指定なし（デフォルト） - 圧縮なし"
 .PHONY: help
+
+DOCKER_COMPOSE_UP := $(DOCKER_COMPOSE) up -d
+DOCKER_COMPOSE_RUN := $(DOCKER_COMPOSE) run --rm $(CONTAINER_NAME)
+up:
+	$(DOCKER_COMPOSE_UP)
+.PHONY: up
+
+down:
+	$(DOCKER_COMPOSE) down
+.PHONY: down
+
+bash:
+
+	docker run --rm $(IMAGE_NAME) bash
+.PHONY: bash
 
 build:
 	$(DOCKER_COMPOSE) build

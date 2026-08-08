@@ -42,7 +42,7 @@ $ cp -rp ~/.ssh/* ./docker/ssh/
 
 ### イメージのビルド
 ```bash
-$ docker compose build
+$ make build
 ```
 
 ### コンテナの起動・ログイン
@@ -52,16 +52,17 @@ $ docker compose exec app bash
 ```
 
 ### イメージのエクスポート
-コンテナIDを得る必要があるので、一旦コンテナを起動します。
+~~コンテナIDを得る必要があるので、一旦コンテナを起動します。
 本稿ではWSLへのインポートを前提にしているので、Windows側の`C:\wsl`に保存される
-手順で記述します。
+手順で記述します。~~
+ダルいのでmake経由でできるようにしました。
 ```bash
-## ビルドしたイメージでコンテナを起動
-$ docker compose up -d
 ## 無圧縮tarで出力(こっちが楽です)
-$ docker export $(docker compose ps -q) > /mnt/c/wsl/export.tar
+$ make image
 ## xzで圧縮する場合
-$ docker export $(docker compose ps -q) | xz -c - > /mnt/c/wsl/export.tar.xz
+$ make image COMPRESS=xz
+## gzipで圧縮する場合
+$ make image COMPRESS=gzip
 ```
 
 ### WSLへのインポート
