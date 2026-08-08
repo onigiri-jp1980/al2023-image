@@ -16,7 +16,7 @@ RUN set -ex && dnf -y upgrade --releasever=latest && \
   dnf install -y --enablerepo=google-cloud-cli unzip tar gcc zlib-devel jq \
     bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel \
     libffi-devel xz-devel sudo shadow nano file procps-ng git google-cloud-cli e2fsprogs parted\
-    passwd iproute findutils diffutils util-linux docker awscli-2 bash-completion && \
+    passwd iproute findutils diffutils util-linux docker awscli-2 bash-completion make && \
   dnf groupinstall -y --disablerepo=google-cloud-cli 'Development Tools' && \
   dnf clean all && \
   mkdir /etc/skel/.ssh && chmod 700 /etc/skel/.ssh && \
