@@ -1,8 +1,11 @@
+set_env_vars_base := USER_NAME=$(shell id -un) USER_ID=$(shell id -u) GROUP_ID=$(shell id -g) GROUP_NAME=$(shell id -gn)
+set_env_vars := $(set_env_vars_base) COMPOSE_FILE=$(COMPOSE_FILE)
+
 COMPRESS ?= none
 IMAGE_NAME := $(shell basename $(CURDIR))-app
 CONTAINER_NAME := app
 # Docker Composeのコマンドを定義
-DOCKER_COMPOSE := docker compose
+DOCKER_COMPOSE := $(set_env_vars) docker compose
 DOCKER_COMPOSE_UP := $(DOCKER_COMPOSE) up -d
 DOCKER_COMPOSE_RUN := $(DOCKER_COMPOSE) run --rm $(CONTAINER_NAME)
 
@@ -47,7 +50,7 @@ down:
 
 bash:
 
-	docker run --rm $(IMAGE_NAME) bash
+	docker run -it --rm $(IMAGE_NAME) bash
 .PHONY: bash
 
 build:

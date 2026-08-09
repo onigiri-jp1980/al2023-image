@@ -28,11 +28,15 @@ RUN set -ex && dnf -y upgrade --releasever=latest && \
   curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION}.x | sudo bash - && \
   dnf install -y nodejs && dnf clean all
 
-# pyenv & homebrew
+# pyenv/homebrew/AIエージェントをインストール
 USER ${USERNAME}
 WORKDIR /home/${USERNAME}
 ARG PYENV_ROOT=/home/${USERNAME}/.pyenv
 ARG BREW_INSTALL_URL=https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh
+ARG ENABLE_CURSOR
+ARG ENABLE_CODEX
+ARG ENABLE_GEMINI
+ARG ENABLE_CLAUDE
 COPY --chown=${USERNAME}:${GROUPNAME} ./docker/al2023/bashrc .bashrc
 COPY --chown=${USERNAME}:${GROUPNAME} ./docker/al2023/bashrc .bashrc
 COPY --chown=${USERNAME}:${GROUPNAME} ./docker/al2023/ssh/ .ssh
@@ -42,4 +46,9 @@ RUN set -ex && pwd &&ls -la && curl https://pyenv.run | bash && \
   ${PYENV_ROOT}/bin/pyenv local ${PYTHON_VERSION} && \
   sh -c "$(curl -fsSL ${BREW_INSTALL_URL})" && \
   find .ssh -type f ! -name '*.pub' -exec chmod 600 {} \; && \
-  rm .ssh/.gitignore
+  rm .ssh/.gitignore && \
+  AGENTS="${ENABLE_CODEX:+@openai/codex} ${ENABLE_GEMINI:+@google/gemini-cli} ${ENABLE_CLAUDE:+@anthropic-ai/claude-code}" && \
+  echo "AGENTS: ${AGENTS}" && \
+  if [ "${ENABLE_CURSOR}" = "true" ]; then curl https://cursor.com/install -fsS | bash; fi && \
+  if [ "${AGENTS}" != "  " ]; then sudo npm install -g ${AGENTS}; fi
+  
