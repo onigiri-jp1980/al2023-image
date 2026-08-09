@@ -1,4 +1,4 @@
-COMPOSE_FILE := $(if $(COMPOSE),compose.$(COMPOSE).yml,docker-compose.yml)
+COMPOSE_FILE := $(if $(COMPOSE),compose.$(COMPOSE).yml,compose.yml)
 
 set_env_vars_base := USER_NAME=$(shell id -un) USER_ID=$(shell id -u) GROUP_ID=$(shell id -g) GROUP_NAME=$(shell id -gn)
 set_env_vars := $(set_env_vars_base) COMPOSE_FILE=$(COMPOSE_FILE)
