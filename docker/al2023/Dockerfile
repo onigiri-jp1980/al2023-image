@@ -24,7 +24,7 @@ RUN set -ex && dnf -y upgrade --releasever=latest && \
   mkdir -p /usr/local/libexec/cli-plugins && usermod -aG docker ${USERNAME} && \  
   curl -sfL https://direnv.net/install.sh | bash && \
   echo "${USERNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USERNAME} && \
-  curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION}.x | sudo bash - && \
+  curl -fsSL https://rpm.nodesource.com/s etup_${NODE_VERSION}.x | sudo bash - && \
   dnf install -y nodejs && dnf clean all
 
 # pyenv/homebrew/AIエージェントをインストール
@@ -36,6 +36,7 @@ ARG ENABLE_CURSOR
 ARG ENABLE_CODEX
 ARG ENABLE_GEMINI
 ARG ENABLE_CLAUDE
+ARG ENABLE_PNPM
 COPY --chown=${USERNAME}:${GROUPNAME} ./docker/al2023/bashrc .bashrc
 COPY --chown=${USERNAME}:${GROUPNAME} ./docker/al2023/bashrc .bashrc
 COPY --chown=${USERNAME}:${GROUPNAME} ./docker/al2023/ssh/ .ssh
@@ -49,5 +50,5 @@ RUN set -ex && pwd &&ls -la && curl https://pyenv.run | bash && \
   AGENTS="${ENABLE_CODEX:+@openai/codex} ${ENABLE_GEMINI:+@google/gemini-cli} ${ENABLE_CLAUDE:+@anthropic-ai/claude-code}" && \
   echo "AGENTS: ${AGENTS}" && \
   if [ "${ENABLE_CURSOR}" = "true" ]; then curl https://cursor.com/install -fsS | bash; fi && \
-  if [ "${AGENTS}" != "  " ]; then sudo npm install -g ${AGENTS}; fi
-  
+  if [ "${AGENTS}" != "  " ]; then sudo npm install -g ${AGENTS}; fi && \
+  if [ "${ENABLE_PNPM}" = "true" ]; then sudo npm install -g pnpm; fi
