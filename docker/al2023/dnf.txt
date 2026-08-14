@@ -17,7 +17,6 @@ nano
 file
 procps-ng
 git
-google-cloud-cli
 e2fsprogs
 parted
 passwd
@@ -30,3 +29,5 @@ awscli-2
 bash-completion
 make
 rsync
+libatomic
+patch

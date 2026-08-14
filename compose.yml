@@ -1,21 +1,21 @@
 services:
   app:
-    env_file:
-      - .env
     build:
       context: .
       dockerfile: ./docker/al2023/Dockerfile
       args:
-        - USERNAME=${USERNAME:-appuser}
-        - GROUPNAME=${GROUPNAME:-appuser}
-        - UID=${UID:-1000}
-        - GID=${GID:-1000}
+        - USER_NAME=${USER_NAME:-app}
+        - GROUP_NAME=${GROUP_NAME:-app}
+        - USER_ID=${USER_ID:-1000}
+        - GROUP_ID=${GROUP_ID:-1000}
         - ENABLE_CURSOR=${ENABLE_CURSOR}
         - ENABLE_GEMINI=${ENABLE_GEMINI}
         - ENABLE_CODEX=${ENABLE_CODEX}
         - ENABLE_CLAUDE=${ENABLE_CLAUDE}
         - ENABLE_PNPM=${ENABLE_PNPM}
+        - ENABLE_GOOGLE_CLOUD_CLI=${ENABLE_GOOGLE_CLOUD_CLI}
         - ARCH=${ARCH:-$(${PWD}/get-arch.sh)}
+        - PNPM_VERSION=${PNPM_VERSION:-11.21.0}
         - PYTHON_VERSION=${PYTHON_VERSION:-3.12.0}
         - DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION:-2.32.4}
         - HOST_DOCKER_GID=${HOST_DOCKER_GID:-1001}

@@ -11,6 +11,8 @@ DOCKER_COMPOSE := $(set_env_vars) docker compose
 DOCKER_COMPOSE_UP := $(DOCKER_COMPOSE) up -d
 DOCKER_COMPOSE_RUN := $(DOCKER_COMPOSE) run --rm $(CONTAINER_NAME)
 
+# ビルドオプションを定義
+OPTIONS := 
 # リリース日を取得するコマンドを定義
 RELEASE_DATE := sed -n 's/^PRETTY_NAME=".*\.\([0-9]\{8\}\)"$$/\1/p' /etc/os-release
 EXPORT_DATE := $(shell date +%Y%m%d)
@@ -31,7 +33,7 @@ endif
 default: help
 
 help:
-	@echo "Usage: make <target> [COMPRESS=<compression method>]"
+	@echo "Usage: make <target> [COMPRESS=<compression method>] [OPTIONS=<build options>]"
 	@echo "Targets:"
 	@echo "  build - Build the Docker image"
 	@echo "  image - dockerイメージをアーカイブファイルにエクスポート"
@@ -56,7 +58,7 @@ bash:
 .PHONY: bash
 
 build:
-	$(DOCKER_COMPOSE) build
+	$(DOCKER_COMPOSE) build ${OPTIONS}
 .PHONY: build
 
 image:
